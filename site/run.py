@@ -20,7 +20,7 @@ def current_temp():
             "response": {
                 "outputSpeech": {
                     "type": "PlainText",
-                    "text": "%6.2f degrees" % item.probe_f
+                    "text": "Temperature is %d degrees" % item['probe_f']
                 },
                 "shouldEndSession": True
             },
