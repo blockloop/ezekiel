@@ -1,5 +1,4 @@
 import sqlite3
-from datetime import datetime
 from flask import g, Flask, render_template, jsonify, request
 
 app = Flask(__name__, static_url_path='/assets', static_folder='./assets')
@@ -15,19 +14,19 @@ def root():
 @app.route('/api/current_temp', methods=['GET', 'POST'])
 def current_temp():
     item = query_db("SELECT * FROM temperatures ORDER BY modified ASC LIMIT 1", one=True)
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return jsonify(item)
+    elif request.method == 'POST':
         return jsonify({
             "response": {
                 "outputSpeech": {
                     "type": "PlainText",
-                    "text": "Temperature is %d degrees" % item['probe_f']
+                    "text": "%d degrees" % item['probe_f']
                 },
                 "shouldEndSession": True
             },
             "sessionAttributes": {}
         })
-    elif request.method == 'GET':
-        return jsonify(item)
 
 
 @app.route('/api/temps')
@@ -56,8 +55,8 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
-    
-    
+
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
