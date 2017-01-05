@@ -64,7 +64,7 @@ def run():
               (probe_f, probe_c, external_f, external_c, modified)
               VALUES (?,?,?,?,?)
               """,
-              (probetemp_f, probetemp_c, externaltemp_f, externaltemp_c, datetime.utcnow()+"Z"))
+              (probetemp_f, probetemp_c, externaltemp_f, externaltemp_c, datetime.utcnow()))
 
     print("Updated temp to %d F" % probetemp_f)
 
