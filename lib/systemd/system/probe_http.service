@@ -1,0 +1,14 @@
+[Unit]
+Description=Thermocouple Probe HTTP service
+After=syslog.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/var/www/ezekiel/site
+ExecStart=/usr/bin/python /var/www/ezekiel/site/run.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

@@ -13,7 +13,7 @@ def root():
 
 @app.route('/api/current_temp', methods=['GET', 'POST'])
 def current_temp():
-    item = query_db("SELECT * FROM temperatures ORDER BY modified ASC LIMIT 1", one=True)
+    item = query_db("SELECT * FROM temperatures ORDER BY modified DESC LIMIT 1", one=True)
     if request.method == 'GET':
         return jsonify(item)
     elif request.method == 'POST':

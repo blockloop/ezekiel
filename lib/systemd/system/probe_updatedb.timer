@@ -1,0 +1,9 @@
+[Unit]
+Description=Run probe_updatedb every 3s and on boot
+
+[Timer]
+OnBootSec=10s
+OnUnitActiveSec=3s 
+
+[Install]
+WantedBy=timers.target
