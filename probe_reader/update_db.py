@@ -55,7 +55,7 @@ def run():
     externaltemp_f = c_to_f(externaltemp_c)
 
     if probetemp_f < 100:
-        print("< 100°F. Not inserting.")
+        print("< 100F. Not inserting.")
         return
 
     print("Updating DB...")
