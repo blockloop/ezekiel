@@ -38,7 +38,7 @@ def tableExists(con):
 # ###
 
 def run():
-    conn = sqlite3.connect(db_file)
+    conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES)
 
     # Create table if not exist
     if tableExists(conn) is False:
@@ -46,7 +46,7 @@ def run():
         c = conn.cursor()
         c.execute('''
                   CREATE TABLE temperatures
-                  (probe_f integer, external_f integer, probe_c integer, external_c integer, modified date)
+                  (probe_f integer, external_f integer, probe_c integer, external_c integer, modified timestamp)
                   ''')
         print("table created")
         c.close()
@@ -54,6 +54,10 @@ def run():
     probetemp_c, externaltemp_c = get_temps()
     probetemp_f = c_to_f(probetemp_c)
     externaltemp_f = c_to_f(externaltemp_c)
+
+    if probetemp_f < 100:
+        print("< 100°F. Not inserting.")
+        return
 
     print("Updating DB...")
 
