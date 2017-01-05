@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# vim: set fileencoding=utf-8 :
+
 import sqlite3
 from flask import g, Flask, render_template, jsonify, request
 
