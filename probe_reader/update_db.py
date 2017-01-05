@@ -4,7 +4,6 @@ import Adafruit_GPIO.SPI as SPI
 import Adafruit_MAX31855.MAX31855 as MAX31855
 import sqlite3
 from datetime import datetime
-from time import sleep
 
 sensor = MAX31855.MAX31855(spi=SPI.SpiDev(0, 0))
 
