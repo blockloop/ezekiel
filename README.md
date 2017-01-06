@@ -81,15 +81,52 @@ python probe_reader/test.py
 If you don't see real temperatures then you may have a problem with connections. Check your solder, the thermocouple wire connections, make sure the screws on the terminal are tight, etc. 
 
 ```bash
+# copy the systemd files to where they can be seen by systemd
 sudo cp lib/systemd/system/* /lib/systemd/system/
-sudo systemctl enable /lib/systemd/system/probe_updatedb.py
-sudo systemctl enable /lib/systemd/system/probe_updatedb.timer
-sudo systemctl enable /lib/systemd/system/probe_http.py
+# make them executable
+sudo chmod +x /lib/systemd/system/ezekiel*
+# reload the systemd daemon so that it detects the files
+sudo systemctl daemon-reload
+# enable and start the services
+sudo systemctl enable /lib/systemd/system/ezekiel_updatedb.service
+sudo systemctl enable /lib/systemd/system/ezekiel_updatedb.timer
+sudo systemctl start ezekiel_updatedb.timer
+sudo systemctl enable /lib/systemd/system/ezekiel_http.service
+sudo systemctl start ezekiel_http
 ```
 
+At this point everything should be running. You can check the status of each of the services to make sure.
 
+```bash
+sudo systemctl status ezekiel_updatedb
+sudo systemctl status ezekiel_http
+```
 
+You should see `Active: active (running)` for the http service and the updatedb service might show dead because it only runs once every 3 seconds. Now check that the http service is working properly by running the following
 
+```bash
+curl -Ss http://localhost:3000/
+```
+
+You should see HTML printed to the screen. 
+
+You can try to load http://raspberrypi:3000/ on another computer which is on the same netowor. It works in most setups but some routers don't create DNS records for hostnames so you might have to get the IP address from the Raspberry PI with `ip addr show | grep -i "inet " | grep -v 127` and try http://\<ip address\>:3000. 
+
+***Important*** the probe will not persist temperatures under 100°F so you might not get any readings on the website immediately. This is a personal preference because I don't want the probe logging infinitely while it's not in use. If you want to change this for testing or some other reason you can edit or delete the lines in [probe_reader/update_db.py](probe_reader/update_db.py) where it says
+
+```python
+    if probetemp_f < 100:
+        print("< 100F. Not inserting.")
+        return
+```
+
+**If you remove the block of code then note that the `/var/www/ezekiel/temperatures.db` file might outgrow the disk because it is persisting a record every 3 seconds.** If you make any changes to the python files you will need to restart the service which pertains to that file.
+
+```bash
+sudo systemctl restart ezekiel_http.service
+# or
+sudo systemctl restart ezekiel_updatedb.service
+```
 
 ## Future Goals
 
