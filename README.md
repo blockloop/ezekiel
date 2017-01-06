@@ -135,5 +135,5 @@ TODO
 
 ## Future Goals
 
-1. Add a display
-2. Add a simple UI with a graphs and historical information
+1. Add a physical display
+2. Save a cook with notes and view cooks in UI
