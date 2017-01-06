@@ -111,7 +111,7 @@ curl -Ss http://localhost:3000/
 
 You should see HTML printed to the screen. 
 
-You can try to load http://raspberrypi:3000/ on another computer which is on the same netowor. It works in most setups but some routers don't create DNS records for hostnames so you might have to get the IP address from the Raspberry PI with `ip addr show | grep -i "inet " | grep -v 127` and try http://\<ip address\>:3000. 
+You can try to load [http://raspberrypi:3000/](http://raspberrypi:3000/) on another computer which is on the same network. It works in most setups but some routers don't create DNS records for hostnames so you might have to get the IP address from the Raspberry PI with `ip addr show | grep -i "inet " | grep -v 127` and try `http://<ip address>:3000`. 
 
 ***Important*** the probe will not persist temperatures under 100°F so you might not get any readings on the website immediately. This is a personal preference because I don't want the probe logging infinitely while it's not in use. If you want to change this for testing or some other reason you can edit or delete the lines in [probe_reader/update_db.py](probe_reader/update_db.py) where it says
 
