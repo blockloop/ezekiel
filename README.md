@@ -128,6 +128,10 @@ sudo systemctl restart ezekiel_http.service
 sudo systemctl restart ezekiel_updatedb.service
 ```
 
+## Setting Up Alexa / Amazon Echo
+
+TODO
+
 ## Future Goals
 
 1. Add a display
