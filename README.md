@@ -72,6 +72,7 @@ sudo chown -r $(WHOAMI) /var/www
 cd /var/www
 git clone https://github.com/blockloop/ezekiel.git
 cd ezekiel
+pip install -r requirements.txt
 python probe_reader/test.py
 # you sould see the following output if the probe reads properly
 #  Probe: 72
