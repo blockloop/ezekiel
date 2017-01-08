@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8 :
 
-import sqlite3
 from flask import g, Flask, render_template, jsonify, request
-
+from data import query
 app = Flask(__name__, static_url_path='/assets', static_folder='./assets')
-
-DATABASE = '../temperatures.db'
 
 
 @app.route('/')
@@ -17,7 +14,7 @@ def root():
 
 @app.route('/api/current_temp', methods=['GET', 'POST'])
 def current_temp():
-    item = query_db("SELECT * FROM temperatures ORDER BY modified DESC LIMIT 1", one=True)
+    item = query("SELECT * FROM temperatures ORDER BY modified DESC LIMIT 1", one=True)
     if request.method == 'GET':
         return jsonify(item)
     elif request.method == 'POST':
@@ -35,7 +32,7 @@ def current_temp():
 
 @app.route('/api/temps')
 def temps():
-    items = query_db("SELECT * FROM temperatures ORDER BY modified ASC")
+    items = query("SELECT * FROM temperatures ORDER BY modified ASC")
     return jsonify({"temperatures": items})
 
 
@@ -46,26 +43,3 @@ def close_connection(exception):
         db.close()
 
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE, detect_types=sqlite3.PARSE_DECLTYPES)
-        db.row_factory = dict_factory
-    return db
-
-
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
-
-
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000, debug=True)
