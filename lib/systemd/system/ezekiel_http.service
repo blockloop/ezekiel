@@ -6,7 +6,7 @@ After=syslog.target
 Type=simple
 User=pi
 WorkingDirectory=/var/www/ezekiel/site
-ExecStart=/usr/bin/python /var/www/ezekiel/site/run.py
+ExecStart=/usr/bin/python /var/www/ezekiel/site/app.py
 StandardOutput=syslog
 StandardError=syslog
 
