@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 var graphData, graph;
+var lock = 0;
 
 function updateTemp() {
 	$.getJSON("/api/current_temp", function (resp) {
@@ -13,7 +14,7 @@ function updateTemp() {
 			var latest = graphData[graphData.length-1];
 
 			// stop unless the update is new
-			if (! moment(resp.modified).isAfter(latest.modified)) {
+			if (! moment(resp.modified).isAfter(latest[0])) {
 				return;
 			}
 
@@ -26,13 +27,17 @@ function updateTemp() {
 }
 
 $(function() {
+	// Update now and every 3s
+	updateTemp();
+	setInterval(updateTemp, 3000)
+
 	$.getJSON("/api/temps", function(resp) {
 		graphData = resp.temperatures.map(function(t) {
 			return [new Date(t.modified), t.probe_f];
 		});
 
-		var firstmtime = graphData[graphData.length-1][0];
-		var lastmtime = graphData[0][0];
+		var lastmtime = graphData[graphData.length-1][0];
+		var firstmtime = graphData[0][0];
 
 		graph = new Dygraph(document.getElementById("tempChart"), graphData, {
 			title: "Historical Temperatures",
@@ -57,9 +62,6 @@ $(function() {
 			xlabel: moment(firstmtime).format("MMM D hh:mm:ss A") + "<br/>TO<br/>" + moment(lastmtime).format("MMM D hh:mm:ss A"),
 			ylabel: "Temperature °F"
 		});
-		// Update now and every 3s
-		updateTemp();
-		setInterval(updateTemp, 3000)
 
 	});
 });
