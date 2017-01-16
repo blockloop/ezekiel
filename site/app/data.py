@@ -5,7 +5,7 @@
 import sqlite3
 from flask import g
 
-_dbpath = '../../temperatures.db'
+_dbpath = '../temperatures.db'
 
 
 def query(queryStr, args=(), one=False):
