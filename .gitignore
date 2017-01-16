@@ -1,3 +1,4 @@
 temperatures.db
 venv
 venv
+*.pyc
