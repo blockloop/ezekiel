@@ -4,6 +4,7 @@
 
 from flask import g, Flask, render_template, jsonify, request
 from data import query
+
 app = Flask(__name__, static_url_path='/assets', static_folder='./assets')
 
 
@@ -15,6 +16,7 @@ def root():
 @app.route('/api/current_temp', methods=['GET', 'POST'])
 def current_temp():
     item = query("SELECT * FROM temperatures ORDER BY modified DESC LIMIT 1", one=True)
+    item['modified'] = item['modified'].isoformat()+"Z"
     if request.method == 'GET':
         return jsonify(item)
     elif request.method == 'POST':
@@ -33,6 +35,8 @@ def current_temp():
 @app.route('/api/temps')
 def temps():
     items = query("SELECT * FROM temperatures ORDER BY modified ASC")
+    for item in items:
+        item['modified'] = item['modified'].isoformat()+"Z"
     return jsonify({"temperatures": items})
 
 
