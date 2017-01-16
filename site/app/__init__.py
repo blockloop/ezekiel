@@ -4,6 +4,7 @@
 
 from flask import g, Flask, render_template, jsonify, request
 from data import query
+from datetime import datetime, timedelta
 
 app = Flask(__name__, static_url_path='/assets', static_folder='./assets')
 
@@ -34,7 +35,14 @@ def current_temp():
 
 @app.route('/api/temps')
 def temps():
-    items = query("SELECT * FROM temperatures ORDER BY modified ASC")
+    since = request.args.get('since')
+    if since is not None:
+        since = datetime.strptime(since, '%Y-%m-%dT%H:%M:%SZ')
+    else:
+        since = datetime.today() - timedelta(hours=2)
+
+    q = "SELECT * FROM temperatures WHERE modified >= ? ORDER BY modified ASC"
+    items = query(q, args=(since,))
     for item in items:
         item['modified'] = item['modified'].isoformat()+"Z"
     return jsonify({"temperatures": items})
