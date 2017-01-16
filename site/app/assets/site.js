@@ -29,15 +29,26 @@ function updateTemp() {
 $(function() {
 	// Update now and every 3s
 	updateTemp();
-	setInterval(updateTemp, 3000)
+	setInterval(updateTemp, 3000);
+	$('#go-btn').click(setTemps);
+	$('form').submit(function() {
+		setTemps();
+		return false;
+	});
+	setTemps();
+});
 
-	$.getJSON("/api/temps", function(resp) {
+function setTemps() {
+	var qs = {};
+	var since = $('#lastHours').val()
+	if (since != null) {
+		qs.since = moment().subtract(since, 'hours').utc().format();
+	}
+
+	$.getJSON("/api/temps", qs, function(resp) {
 		graphData = resp.temperatures.map(function(t) {
 			return [new Date(t.modified), t.probe_f];
 		});
-
-		var lastmtime = graphData[graphData.length-1][0];
-		var firstmtime = graphData[0][0];
 
 		graph = new Dygraph(document.getElementById("tempChart"), graphData, {
 			title: "Historical Temperatures",
@@ -59,9 +70,8 @@ $(function() {
 			strokeBorderWidth: 1,
 			highlightCircleSize: 5,
 			fillGraph: true,
-			xlabel: moment(firstmtime).format("MMM D hh:mm:ss A") + "<br/>TO<br/>" + moment(lastmtime).format("MMM D hh:mm:ss A"),
 			ylabel: "Temperature °F"
 		});
 
 	});
-});
+}
