@@ -2,9 +2,11 @@
 
 var graphData, graph;
 var lock = 0;
+var title = document.title;
 
 function updateTemp() {
 	$.getJSON("/api/current_temp", function (resp) {
+		document.title = `${resp.probe_f}°F - ${title}`
 		document.getElementById('currentTempNumber')
 			.textContent = resp.probe_f
 		document.getElementById('currentTempAsOf')
