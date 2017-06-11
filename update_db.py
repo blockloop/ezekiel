@@ -43,29 +43,29 @@ def run():
     probetemp_f = c_to_f(probetemp_c)
     externaltemp_f = c_to_f(externaltemp_c)
 
-    if probetemp_f < 100:
-        print("< 100F. Not inserting.")
-        return
+#   if probetemp_f < 100:
+#       print("< 100F. Not inserting.")
+#       return
 
     print("adding record to %s" % api_host)
 
-    data = {'probe_f': probetemp_f,
-            'probe_c': probetemp_c,
-            'external_f': externaltemp_f,
-            'external_c': externaltemp_c}
+    data = {'probe_f': int(probetemp_f),
+            'probe_c': int(probetemp_c),
+            'external_f': int(externaltemp_f),
+            'external_c': int(externaltemp_c)}
 
     resp = requests.post(
         url="%s/api/temperature" % api_host,
-        data=data,
+        json=data,
         auth=(auth_user, auth_pass)
     )
 
     if not 200 <= resp.status_code <= 299:
-        sys.exit("bad status from API: %s\n\t%s"
-                 % (resp.status_code, resp.json()))
+        sys.exit("bad status from API: %s\n\tcontent:%s"
+                 % (resp.status_code, resp.content))
 
     print("Updated temp to %d F" % probetemp_f)
-    print("DEBUG: %s" % resp.json())
+    print("[DEBUG] response: %s" % resp.content)
 
 
 if __name__ == '__main__':

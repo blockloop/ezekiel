@@ -3,3 +3,4 @@ venv
 venv
 *.pyc
 .direnv
+lib/systemd/system/ezekiel_updatedb.service
