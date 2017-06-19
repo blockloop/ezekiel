@@ -43,9 +43,9 @@ def run():
     probetemp_f = c_to_f(probetemp_c)
     externaltemp_f = c_to_f(externaltemp_c)
 
-#   if probetemp_f < 100:
-#       print("< 100F. Not inserting.")
-#       return
+    if probetemp_f < 100:
+        print("< 100F. Not inserting.")
+        return
 
     print("adding record to %s" % api_host)
 
